@@ -1,8 +1,8 @@
 import logging
 
-import crowdstrike.api as api
-import crowdstrike.models as model
-import crowdstrike.database as database
+import qualys.api as api
+import qualys.models as model
+import qualys.database as database
 
 import conf
 import db
