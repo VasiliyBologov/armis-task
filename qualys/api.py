@@ -1,20 +1,22 @@
-import requests
+import aiohttp
 
 import conf
 
 
-def fetch_data(cfg: conf.Config, skip: int = 0, limit: int = 1):
+async def fetch_data(cfg: conf.Config, skip: int = 0, limit: int = 1):
     result = []
     err = None
     url = cfg.qualys_url
     headers = {
         "token": cfg.api_token,
     }
-    req = requests.post(url, params={"skip": skip, "limit": limit}, headers=headers)
-    if req.status_code != 200:
-        err = req.text
-        if ">number of hosts" in err:
-            err = "less_limit"
-    else:
-        result = req.json()
-    return result, err, limit
+    params = {"skip": skip, "limit": limit}
+    async with aiohttp.ClientSession() as session:
+        async with session.post(url, params=params, headers=headers) as resp:
+            if resp.status != 200:
+                err = await resp.text()
+                if ">number of hosts" in err:
+                    err = "less_limit"
+            else:
+                result = await resp.json()
+            return result, err, limit
