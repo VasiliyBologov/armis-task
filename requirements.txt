@@ -3,3 +3,5 @@ pydantic
 pymongo
 dotenv
 motor
+aiohttp
+asyncio

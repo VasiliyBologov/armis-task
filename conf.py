@@ -32,6 +32,10 @@ class Config(BaseModel):
 
 
 def load_config() -> Config:
+    """
+    Load configuration from environment variables.
+    :return: Config
+    """
     load_dotenv(override=False)
 
     crowdstrike_url = os.getenv("CROWDSTRIKE")

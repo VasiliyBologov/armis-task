@@ -1,6 +1,11 @@
 from datetime import datetime
 
 def validate_datetime(value):
+    """
+    Function for validate and convert datetime input from string to datetime object.
+    :param value: datetime or string
+    :return: datetime
+    """
     if value is not None:
         if isinstance(value, datetime):
             return value

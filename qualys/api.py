@@ -4,6 +4,13 @@ import conf
 
 
 async def fetch_data(cfg: conf.Config, skip: int = 0, limit: int = 1):
+    """
+    Fetch data from Qualis.
+    :param cfg: Config
+    :param skip: How many records to skip
+    :param limit: How many records to fetch
+    :return: list of dicts with data
+    """
     result = []
     err = None
     url = cfg.qualys_url

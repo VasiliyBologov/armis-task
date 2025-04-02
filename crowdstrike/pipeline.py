@@ -7,9 +7,15 @@ import conf
 import db
 
 
+logging.basicConfig(level=logging.INFO)
+log = logging.getLogger(__name__)
+log.setLevel(logging.DEBUG)
+
+
 async def run(cfg: conf.Config):
+    log.info(f"Starting pipeline")
     crowdstrike_db = await db.create_connection(cfg.mongo_url, cfg.mongo_db, cfg.crowdstrike_hosts_collection)
-    print(type(crowdstrike_db))
+
     skip = 0
     chank_size = 2
     while True:
@@ -17,10 +23,12 @@ async def run(cfg: conf.Config):
         if err:
             if err == "less_limit":
                 chank_size -= 1
+                log.warning(f"Catch 'less_limit' error: {err}")
                 continue
             if chank_size == 0:
+                log.warning(f"Catch 'chank_size' = 0")
                 break
-            logging.error(err)
+            log.warning(f"Catch unknown error: {err}")
             break
         data = []
         for r in res:
@@ -30,3 +38,4 @@ async def run(cfg: conf.Config):
 
         await db.bulk_write(crowdstrike_db, data)
 
+    log.info(f"Pipeline finished")
